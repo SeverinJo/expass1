@@ -6,6 +6,7 @@ import java.time.Instant;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Vote {
+    private Long id;
     private Instant publishedAt;
     private User voter;
     private VoteOption option;
@@ -13,10 +14,12 @@ public class Vote {
     public Vote() {
     }
 
-    public Vote(Instant publishedAt, User voter, VoteOption option) {
-        this.publishedAt = publishedAt;
-        this.voter = voter;
-        this.option = option;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Instant getPublishedAt() {

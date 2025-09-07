@@ -8,6 +8,7 @@ import java.util.List;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
+    private Long id;
     private String username;
     private String email;
     private List<Poll> polls;
@@ -16,19 +17,12 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email) {
-        this.username = username;
-        this.email = email;
-        this.polls = new ArrayList<>();
-        this.votes = new ArrayList<>();
+    public Long getId() {
+        return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -37,6 +31,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Poll> getPolls() {
