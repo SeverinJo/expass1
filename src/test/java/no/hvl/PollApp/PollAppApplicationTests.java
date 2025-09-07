@@ -1,10 +1,10 @@
-package no.hvl.expass1;
+package no.hvl.PollApp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Expass1ApplicationTests {
+class PollAppApplicationTests {
 
 	@Test
 	void contextLoads() {
