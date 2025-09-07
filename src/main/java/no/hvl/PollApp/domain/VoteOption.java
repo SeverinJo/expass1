@@ -1,4 +1,4 @@
-package no.hvl.PollApp;
+package no.hvl.PollApp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

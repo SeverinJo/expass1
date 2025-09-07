@@ -1,5 +1,9 @@
-package no.hvl.PollApp;
+package no.hvl.PollApp.component;
 
+import no.hvl.PollApp.domain.Poll;
+import no.hvl.PollApp.domain.User;
+import no.hvl.PollApp.domain.Vote;
+import no.hvl.PollApp.domain.VoteOption;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
