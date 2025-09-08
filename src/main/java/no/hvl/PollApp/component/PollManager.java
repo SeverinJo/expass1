@@ -48,7 +48,7 @@ public class PollManager {
     public Poll createPoll(Poll p, long creatorId) {
         p.setId(ids.getAndIncrement());
         User creator = users.get(creatorId);
-        p.setCreator(creator);
+        p.setCreatedBy(creator);
         if (creator != null) creator.getPolls().add(p);
         polls.put(p.getId(), p);
         return p;

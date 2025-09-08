@@ -2,7 +2,9 @@ package no.hvl.PollApp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -12,7 +14,7 @@ public class Poll {
     private Instant publishedAt;
     private Instant validUntil;
     private User createdBy;
-    private List<VoteOption> options;
+    private List<VoteOption> options = new ArrayList<>();
 
     public Poll() {
     }
@@ -53,7 +55,7 @@ public class Poll {
         return createdBy;
     }
 
-    public void setCreator(User createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 

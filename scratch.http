@@ -1,0 +1,136 @@
+@baseUrl = http://localhost:8080
+
+
+### Create user 1
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{ "username": "alice", "email": "alice@example.com" }
+
+> {% client.global.set("u1", response.body.id); %}
+
+<> 2025-09-08T091423.200.json
+<> 2025-09-08T091346.404.json
+<> 2025-09-08T090138.200.json
+<> 2025-09-08T082713.200.json
+
+### List users (should include alice)
+GET {{baseUrl}}/users
+
+<> 2025-09-08T091424.200.json
+<> 2025-09-08T091347.404.json
+<> 2025-09-08T090139.200.json
+<> 2025-09-08T082713-1.200.json
+
+### Create user 2
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{ "username": "bob", "email": "bob@example.com" }
+
+> {% client.global.set("u2", response.body.id); %}
+
+<> 2025-09-08T091424-1.200.json
+<> 2025-09-08T091347-1.404.json
+<> 2025-09-08T090139-1.200.json
+<> 2025-09-08T082713-2.200.json
+<> 2025-09-08T082103-2.200.json
+
+### List users (should include two)
+GET {{baseUrl}}/users
+
+<> 2025-09-08T091424-2.200.json
+<> 2025-09-08T091347-2.404.json
+<> 2025-09-08T090139-2.200.json
+<> 2025-09-08T082713-3.200.json
+<> 2025-09-08T082103-3.200.json
+
+### User 1 creates poll
+POST {{baseUrl}}/polls?creatorId={{u1}}
+Content-Type: application/json
+
+{
+  "question": "Your favorite editor?",
+  "publishedAt": "2025-09-07T10:00:00Z",
+  "validUntil": "2025-12-31T23:59:59Z"
+}
+
+> {% client.global.set("pollId", response.body.id); %}
+
+<> 2025-09-08T091424-3.200.json
+<> 2025-09-08T090139-3.200.json
+<> 2025-09-08T082713.500.json
+<> 2025-09-08T082103.500.json
+
+### List polls
+GET {{baseUrl}}/polls
+
+<> 2025-09-08T091424-4.200.json
+<> 2025-09-08T091347-3.404.json
+<> 2025-09-08T090139-4.200.json
+<> 2025-09-08T082713-4.200.json
+<> 2025-09-08T082103-4.200.json
+
+### Add two options
+POST {{baseUrl}}/polls/{{pollId}}/options
+Content-Type: application/json
+
+{ "caption": "IntelliJ", "presentationOrder": 1 }
+
+> {% client.global.set("opt1", response.body.id); %}
+
+<> 2025-09-08T091424-5.200.json
+<> 2025-09-08T091347-4.404.json
+<> 2025-09-08T090139-5.200.json
+
+###
+POST {{baseUrl}}/polls/{{pollId}}/options
+Content-Type: application/json
+
+{ "caption": "VS Code", "presentationOrder": 2 }
+
+> {% client.global.set("opt2", response.body.id); %}
+
+<> 2025-09-08T091424-6.200.json
+<> 2025-09-08T091347-5.404.json
+<> 2025-09-08T090139-6.200.json
+
+### User 2 votes on the poll
+POST {{baseUrl}}/votes?userId={{u2}}&optionId={{opt1}}
+Content-Type: application/json
+
+{ "publishedAt": "2025-09-07T10:05:00Z" }
+
+> {% client.global.set("voteId", response.body.id); %}
+
+<> 2025-09-08T091424-7.200.json
+<> 2025-09-08T090139-7.200.json
+
+### User 2 changes his vote
+PUT {{baseUrl}}/votes/{{voteId}}?newOptionId={{opt2}}
+
+<> 2025-09-08T091424-8.200.json
+<> 2025-09-08T090139-8.200.json
+
+### List votes (should show latest choice)
+GET {{baseUrl}}/votes
+
+<> 2025-09-08T091424-9.200.json
+<> 2025-09-08T091347-6.404.json
+<> 2025-09-08T090139-9.200.json
+<> 2025-09-08T082713-5.200.json
+<> 2025-09-08T082103-5.200.json
+
+### Delete the poll
+DELETE {{baseUrl}}/polls/{{pollId}}
+
+<> 2025-09-08T091347-7.404.json
+
+### List votes (should be empty after cascade)
+GET {{baseUrl}}/votes
+
+<> 2025-09-08T091424-10.200.json
+<> 2025-09-08T091347-8.404.json
+<> 2025-09-08T090139-10.200.json
+<> 2025-09-08T082713-6.200.json
+<> 2025-09-08T082103-6.200.json

@@ -1,28 +1,18 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout sources
         uses: actions/checkout@v4
 
@@ -31,7 +21,69 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 21
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
       - name: Build with Gradle
         run: ./gradlew build
+
+  http-tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Gradle (caching, summaries)
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Start app
+        run: |
+          nohup ./gradlew bootRun --no-daemon > app.log 2>&1 &
+          echo "APP_PID=$!" >> $GITHUB_ENV
+
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..60}; do
+            if curl -sf http://127.0.0.1:8080/ping >/dev/null; then
+              echo "up"; break
+            elif curl -sf http://127.0.0.1:8080/actuator/health >/dev/null; then
+              echo "up"; break
+            fi
+            sleep 1
+          done
+
+      - name: Download ijhttp (HTTP Client CLI)
+        run: |
+          curl -fL -o ijhttp.zip "https://jb.gg/ijhttp/latest"
+          unzip -qo ijhttp.zip
+          ./ijhttp --version
+
+      - name: Run HTTP tests
+        run: ./ijhttp --env-file http-client.env.json --env local --report pollapp.http
+
+      - name: Upload HTTP test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: http-client-report
+          path: reports/
+
+      - name: Upload app log (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-log
+          path: app.log
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -n "${{ env.APP_PID }}" ]; then kill ${{ env.APP_PID }} || true; fi
