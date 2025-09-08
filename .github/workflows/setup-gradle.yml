@@ -59,6 +59,8 @@ jobs:
             fi
             sleep 1
           done
+      - name: Install unzip (if missing)
+        run: sudo apt-get update && sudo apt-get install -y unzip
 
       - name: Download ijhttp (HTTP Client CLI)
         run: |
