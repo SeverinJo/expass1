@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/users")
 public class UserController {
     private final PollManager mgr;
