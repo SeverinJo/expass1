@@ -49,16 +49,19 @@ jobs:
           echo "APP_PID=$!" >> $GITHUB_ENV
 
       - name: Wait for app (60s)
+        shell: bash
         run: |
+          set -euo pipefail
           for i in {1..60}; do
-            if curl -sf http://127.0.0.1:8080/ping >/dev/null; then exit 0; fi
-            # actuator alternative if present:
-            if curl -sf http://127.0.0.1:8080/actuator/health >/dev/null; then exit 0; fi
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/users || true)
+            if [[ "$code" =~ ^(200|204|404)$ ]]; then
+              echo "Server is up: /users -> $code"
+              exit 0
+            fi
             sleep 1
           done
-          echo "Server didn't start in time"
-          tail -n 200 app.log || true
-          exit 1
+          echo "Server didn't start in time"; tail -n 200 app.log || true; exit 1
+
         # Using /actuator/health is the standard readiness probe if actuator is added. :contentReference[oaicite:4]{index=4}
 
       - name: Install unzip
