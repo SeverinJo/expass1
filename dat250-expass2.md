@@ -1,6 +1,6 @@
 # DAT250 – Experiment Assignment 2 (Poll App)
 
-**Repo:** <link to your GitHub repository>  
+**Repo:** https://github.com/SeverinJo/poll-app 
 **Report:** this file (`dat250-expass2.md`)
 
 ## What I built
