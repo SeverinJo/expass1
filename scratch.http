@@ -46,7 +46,7 @@ GET {{baseUrl}}/users
 <> 2025-09-08T082103-3.200.json
 
 ### User 1 creates poll
-POST {{baseUrl}}/polls?creatorId={{u1}}
+POST {{baseUrl}}/created?creatorId={{u1}}
 Content-Type: application/json
 
 {
@@ -62,8 +62,8 @@ Content-Type: application/json
 <> 2025-09-08T082713.500.json
 <> 2025-09-08T082103.500.json
 
-### List polls
-GET {{baseUrl}}/polls
+### List created
+GET {{baseUrl}}/created
 
 <> 2025-09-08T091424-4.200.json
 <> 2025-09-08T091347-3.404.json
@@ -72,7 +72,7 @@ GET {{baseUrl}}/polls
 <> 2025-09-08T082103-4.200.json
 
 ### Add two options
-POST {{baseUrl}}/polls/{{pollId}}/options
+POST {{baseUrl}}/created/{{pollId}}/options
 Content-Type: application/json
 
 { "caption": "IntelliJ", "presentationOrder": 1 }
@@ -84,7 +84,7 @@ Content-Type: application/json
 <> 2025-09-08T090139-5.200.json
 
 ###
-POST {{baseUrl}}/polls/{{pollId}}/options
+POST {{baseUrl}}/created/{{pollId}}/options
 Content-Type: application/json
 
 { "caption": "VS Code", "presentationOrder": 2 }
@@ -122,7 +122,7 @@ GET {{baseUrl}}/votes
 <> 2025-09-08T082103-5.200.json
 
 ### Delete the poll
-DELETE {{baseUrl}}/polls/{{pollId}}
+DELETE {{baseUrl}}/created/{{pollId}}
 
 <> 2025-09-08T091347-7.404.json
 

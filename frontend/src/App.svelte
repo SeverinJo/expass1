@@ -9,11 +9,11 @@
     let question = '';
     let options = ['']; // array of option captions
     // list
-    let polls = [];
+    let created = [];
     let error = '';
 
     async function ensurePolls() {
-        try { polls = await api.listPolls(); }
+        try { created = await api.listPolls(); }
         catch (e) { error = e.message; }
     }
 
@@ -86,11 +86,11 @@
     <button on:click={createPoll}>Create</button>
 
     <h3>Polls</h3>
-    {#if polls.length === 0}
-        <p>No polls yet</p>
+    {#if created.length === 0}
+        <p>No created yet</p>
     {:else}
         <ul>
-            {#each polls as p (p.id)}
+            {#each created as p (p.id)}
                 {#if p && p.question}
                     <li style="margin:.5rem 0;">
                         <strong>{p.question}</strong>

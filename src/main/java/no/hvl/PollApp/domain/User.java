@@ -1,20 +1,46 @@
 package no.hvl.PollApp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String email;
-    private List<Poll> polls = new ArrayList<>();
+    @OneToMany
+    private Set<Poll> created = new LinkedHashSet<>();
+    @OneToMany
     private List<Vote> votes = new ArrayList<>();
 
     public User() {
+    }
+
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+        this.created = new LinkedHashSet<>();
+    }
+
+    public Poll createPoll(String question) {
+        Poll poll = new Poll(question);
+        poll.setCreatedBy(this);
+        poll.setPublishedAt(Instant.now());
+        poll.setValidUntil(Instant.parse("2025-12-31T23:59:59.00Z"));
+        this.created.add(poll);
+        return poll;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {
@@ -33,20 +59,12 @@ public class User {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
+    public Set<Poll> getCreated() {
+        return created;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Poll> getPolls() {
-        return polls;
-    }
-
-    public void setPolls(List<Poll> polls) {
-        this.polls = polls;
+    public void setCreated(Set<Poll> created) {
+        this.created = created;
     }
 
     public List<Vote> getVotes() {

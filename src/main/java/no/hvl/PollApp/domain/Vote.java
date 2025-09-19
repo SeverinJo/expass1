@@ -2,13 +2,19 @@ package no.hvl.PollApp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+
 import java.time.Instant;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
 public class Vote {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Instant publishedAt;
+    @ManyToOne
     private User voter;
+    @ManyToOne
     private VoteOption option;
 
     public Vote() {

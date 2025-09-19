@@ -2,29 +2,36 @@ package no.hvl.PollApp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
 public class Poll {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
+    @ManyToOne
     private User createdBy;
+    @OneToMany
     private List<VoteOption> options = new ArrayList<>();
 
     public Poll() {
     }
 
-    public Long getId() {
-        return id;
+    public Poll(String question) {
+        this.question = question;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public VoteOption addVoteOption(String caption) {
+        VoteOption voteOption = new VoteOption();
+        voteOption.setCaption(caption);
+        return voteOption;
     }
 
     public String getQuestion() {
