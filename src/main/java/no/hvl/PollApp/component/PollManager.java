@@ -1,3 +1,4 @@
+/*
 package no.hvl.PollApp.component;
 
 import no.hvl.PollApp.domain.Poll;
@@ -49,7 +50,7 @@ public class PollManager {
         p.setId(ids.getAndIncrement());
         User creator = users.get(creatorId);
         p.setCreatedBy(creator);
-        if (creator != null) creator.getPolls().add(p);
+        if (creator != null) creator.getCreated().add(p);
         polls.put(p.getId(), p);
         return p;
     }
@@ -74,7 +75,7 @@ public class PollManager {
     public boolean deletePoll(long id) {
         Poll p = polls.remove(id);
         if (p == null) return false;
-        if (p.getCreatedBy() != null) p.getCreatedBy().getPolls().remove(p);
+        if (p.getCreatedBy() != null) p.getCreatedBy().getCreated().remove(p);
         // remove options + related votes
         for (VoteOption o : new ArrayList<>(p.getOptions())) {
             deleteOption(o.getId());
@@ -133,4 +134,4 @@ public class PollManager {
     public boolean deleteVote(long id) {
         return votes.remove(id) != null;
     }
-}
+}*/
