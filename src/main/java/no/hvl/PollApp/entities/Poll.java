@@ -1,7 +1,5 @@
-package no.hvl.PollApp.domain;
+package no.hvl.PollApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -9,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name="polls")
 public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +17,7 @@ public class Poll {
     private Instant validUntil;
     @ManyToOne
     private User createdBy;
-    @OneToMany
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<VoteOption> options = new ArrayList<>();
 
     public Poll() {
@@ -31,7 +30,18 @@ public class Poll {
     public VoteOption addVoteOption(String caption) {
         VoteOption voteOption = new VoteOption();
         voteOption.setCaption(caption);
+        voteOption.setPoll(this);
+        voteOption.setPresentationOrder(options.size());
+        this.options.add(voteOption);
         return voteOption;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getQuestion() {

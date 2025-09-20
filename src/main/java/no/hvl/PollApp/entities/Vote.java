@@ -1,12 +1,11 @@
-package no.hvl.PollApp.domain;
+package no.hvl.PollApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.time.Instant;
 
 @Entity
+@Table(name="votes")
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +14,7 @@ public class Vote {
     @ManyToOne
     private User voter;
     @ManyToOne
-    private VoteOption option;
+    private VoteOption votesOn;
 
     public Vote() {
     }
@@ -45,10 +44,10 @@ public class Vote {
     }
 
     public VoteOption getOption() {
-        return option;
+        return votesOn;
     }
 
     public void setOption(VoteOption option) {
-        this.option = option;
+        this.votesOn = option;
     }
 }

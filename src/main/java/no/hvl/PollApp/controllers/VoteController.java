@@ -1,8 +1,8 @@
+/*
 // src/main/java/no/hvl/PollApp/VoteController.java
 package no.hvl.PollApp.controllers;
 
-import no.hvl.PollApp.domain.*;
-import no.hvl.PollApp.component.*;
+import no.hvl.PollApp.entities.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,3 +38,4 @@ public class VoteController {
         return mgr.deleteVote(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
+*/

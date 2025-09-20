@@ -1,7 +1,7 @@
+/*
 package no.hvl.PollApp.controllers;
 
-import no.hvl.PollApp.domain.*;
-import no.hvl.PollApp.component.*;
+import no.hvl.PollApp.entities.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,3 +35,4 @@ public class UserController {
         return mgr.deleteUser(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
+*/

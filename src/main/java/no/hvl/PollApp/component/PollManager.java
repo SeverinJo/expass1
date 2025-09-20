@@ -1,3 +1,4 @@
+/*
 package no.hvl.PollApp.component;
 
 import no.hvl.PollApp.domain.Poll;
@@ -133,4 +134,4 @@ public class PollManager {
     public boolean deleteVote(long id) {
         return votes.remove(id) != null;
     }
-}
+}*/

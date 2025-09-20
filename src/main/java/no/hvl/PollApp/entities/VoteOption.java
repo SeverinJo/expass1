@@ -1,10 +1,9 @@
-package no.hvl.PollApp.domain;
+package no.hvl.PollApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="vote_options")
 public class VoteOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

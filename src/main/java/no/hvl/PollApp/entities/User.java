@@ -1,4 +1,4 @@
-package no.hvl.PollApp.domain;
+package no.hvl.PollApp.entities;
 
 import jakarta.persistence.*;
 
@@ -6,15 +6,16 @@ import java.time.Instant;
 import java.util.*;
 
 @Entity
+@Table(name="users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String email;
-    @OneToMany
+    @OneToMany(mappedBy = "createdBy")
     private Set<Poll> created = new LinkedHashSet<>();
-    @OneToMany
+    @OneToMany(mappedBy = "voter")
     private List<Vote> votes = new ArrayList<>();
 
     public User() {
@@ -33,6 +34,14 @@ public class User {
         poll.setValidUntil(Instant.parse("2025-12-31T23:59:59.00Z"));
         this.created.add(poll);
         return poll;
+    }
+
+    public Vote voteFor(VoteOption option) {
+        Vote vote = new Vote();
+        vote.setPublishedAt(Instant.now());
+        vote.setVoter(this);
+        vote.setOption(option);
+        return vote;
     }
 
     public String getEmail() {
