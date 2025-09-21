@@ -13,16 +13,18 @@
 
 ## Technical problems & how I solved them
 
-# 
+# Entity Model
+Getting all the annotations right, and the relationships between the entities. Especially annotations like mappedBy, which is still a bit confusing, proved a challenge to get right.
 
 # Over-complication
-Misunderstood the scope of the task, so i went along and created repositories and services to do crud operations on the H2 database. Turns out it was just changing the domain model to fit the Hibernate framework.
+Misunderstood the scope of the task, so I went along and created repositories and services to do crud operations on the H2 database. Turns out it was just changing the domain model to fit the Hibernate framework.
 
 # Tools
 For solving this I relied on videos from lectures, online documentation and AI tools.
 
-<img alt="250921_12h39m23s_screenshot.png" src="../Expass4/250921_12h39m23s_screenshot.png"/>
-<img alt="250921_12h39m43s_screenshot.png" src="../Expass4/250921_12h39m43s_screenshot.png"/>
-<img alt="250921_12h39m55s_screenshot.png" src="../Expass4/250921_12h39m55s_screenshot.png"/>
-<img alt="250921_12h40m06s_screenshot.png" src="../Expass4/250921_12h40m06s_screenshot.png"/>
-<img alt="250921_12h40m50s_screenshot.png" src="../Expass4/250921_12h40m50s_screenshot.png"/>
+# Database Screenshots
+<img alt="250921_12h39m23s_screenshot.png" src="DB%20Screenshots/250921_12h39m23s_screenshot.png"/>
+<img alt="250921_12h39m43s_screenshot.png" src="DB%20Screenshots/250921_12h39m43s_screenshot.png"/>
+<img alt="250921_12h39m55s_screenshot.png" src="DB%20Screenshots/250921_12h39m55s_screenshot.png"/>
+<img alt="250921_12h40m06s_screenshot.png" src="DB%20Screenshots/250921_12h40m06s_screenshot.png"/>
+<img alt="250921_12h40m50s_screenshot.png" src="DB%20Screenshots/250921_12h40m50s_screenshot.png"/>
