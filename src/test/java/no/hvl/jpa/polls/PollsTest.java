@@ -53,7 +53,8 @@ public class PollsTest {
                 .managedClass(User.class)
                 .managedClass(Vote.class)
                 .managedClass(VoteOption.class)
-                .property(PersistenceConfiguration.JDBC_URL, "jdbc:h2:mem:polls")
+                .property(PersistenceConfiguration.JDBC_URL,
+                        "jdbc:h2:file:/tmp/polls;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE")
                 .property(PersistenceConfiguration.SCHEMAGEN_DATABASE_ACTION, "drop-and-create")
                 .property(PersistenceConfiguration.JDBC_USER, "sa")
                 .property(PersistenceConfiguration.JDBC_PASSWORD, "")

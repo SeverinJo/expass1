@@ -4,8 +4,8 @@
 **Report:** this file (`dat250-expass3.md`)
 
 ## What I built
-- Chose tA user interface for creating users and created, as well as voting on created.
-- 
+- Chose Svelte to create a user interface where users can create accounts and polls, as well as vote on created polls.
+
 
 ## How to run
 ```bash
