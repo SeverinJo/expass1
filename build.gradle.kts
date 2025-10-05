@@ -20,9 +20,13 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation ("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.hibernate.orm:hibernate-core:7.1.1.Final")
     implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
-    implementation("com.h2database:h2:2.3.232")
+    implementation("io.valkey:valkey-java:5.4.0")
+    implementation ("org.springframework.data:spring-data-redis")
+    implementation("redis.clients:jedis:5.1.5")
+    implementation ("com.fasterxml.jackson.core:jackson-databind")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

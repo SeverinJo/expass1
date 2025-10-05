@@ -1,17 +1,19 @@
 package no.hvl.PollApp.entities;
 
 import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@RedisHash
 @Table(name="polls")
 public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
@@ -36,11 +38,11 @@ public class Poll {
         return voteOption;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

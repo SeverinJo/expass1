@@ -1,16 +1,18 @@
 package no.hvl.PollApp.entities;
 
 import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.Instant;
 import java.util.*;
 
 @Entity
+@RedisHash
 @Table(name="users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String username;
     private String email;
     @OneToMany(mappedBy = "createdBy")
@@ -52,11 +54,11 @@ public class User {
         this.email = email;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
