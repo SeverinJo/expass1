@@ -1,38 +1,43 @@
 package no.hvl.PollApp;
 
 import io.valkey.UnifiedJedis;
-import java.util.Map;
+import java.util.*;
 
 public class PollCache {
     private final UnifiedJedis jedis;
+
+    // Optional: in-process cache (just for one run). Use if you want local speed.
+    private final Map<String, Map<String, String>> localCache = new HashMap<>();
 
     public PollCache() {
         this.jedis = new UnifiedJedis("redis://127.0.0.1:6379");
     }
 
     public Map<String, String> getPollResults(String pollId) {
-        String key = "poll:" + pollId;
-        Map<String, String> cached = jedis.hgetAll(key);
-        if (!cached.isEmpty()) {
-            System.out.println("Cache hit for poll " + pollId);
-            return cached;
+        // Check local in-process cache first
+        if (localCache.containsKey(pollId)) {
+            System.out.println("[Local Cache HIT] " + pollId);
+            return localCache.get(pollId);
         }
 
-        System.out.println("Cache miss for poll " + pollId + " — computing fake DB results...");
+        // Otherwise, check Redis
+        String redisKey = "poll:" + pollId;
+        Map<String, String> redisHash = jedis.hgetAll(redisKey);
+        if (redisHash != null && !redisHash.isEmpty()) {
+            System.out.println("[Redis HIT] " + redisKey);
+            localCache.put(pollId, redisHash);
+            return redisHash;
+        }
 
-        Map<String, String> dbResult = Map.of(
-                "title", "Pineapple on Pizza?",
-                "option:yes_yammy", "269",
-                "option:mamma_mia_nooooo", "268",
-                "option:i_do_not_really_care", "42"
-        );
-
-        jedis.hset(key, dbResult);
-        jedis.expire(key, 300);
-        return dbResult;
+        System.out.println("[Miss] no data found for poll:" + pollId);
+        return Map.of();
     }
 
-    public void invalidatePoll(String pollId) {
-        jedis.del("poll:" + pollId);
+    public long vote(String pollId, String caption) {
+        String redisKey = "poll:" + pollId;
+        String field = "option:" + caption;
+        long newCount = jedis.hincrBy(redisKey, field, 1);
+        localCache.remove(pollId);
+        return newCount;
     }
 }

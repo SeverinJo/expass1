@@ -1,32 +1,31 @@
 package no.hvl.PollApp;
 
-import io.valkey.UnifiedJedis;
+import java.util.Map;
 
 public class ValkeyApplication {
     public static void main(String[] args) {
-        try (UnifiedJedis jedis = new UnifiedJedis("redis://127.0.0.1:6379")) {
+        PollCache cache = new PollCache();
+        String pollId = "03ebcb7b-bd69-440b-924e-f5b7d664af7b";
 
-            String pollKey = "poll:03ebcb7b-bd69-440b-924e-f5b7d664af7b";
+        cache.vote(pollId, "Yes, yammy!");
+        cache.vote(pollId, "Yes, yammy!");
+        cache.vote(pollId, "Mamma mia, nooooo!");
+        cache.vote(pollId, "I do not really care ...");
 
-            jedis.hset(pollKey, "title", "Pineapple on Pizza?");
-            jedis.hset(pollKey, "option:Yes, yammy!", "269");
-            jedis.hset(pollKey, "option:Mamma Mia, nooooo!", "268");
-            jedis.hset(pollKey, "option:I do not really care...", "42");
+        // First fetch → likely Redis HIT
+        Map<String, String> r1 = cache.getPollResults(pollId);
+        System.out.println(r1);
 
-            System.out.println("Initial poll hash:");
-            jedis.hgetAll(pollKey).forEach((field, value) ->
-                    System.out.println(field + " = " + value)
-            );
+        // Second fetch → Local cache HIT
+        Map<String, String> r2 = cache.getPollResults(pollId);
+        System.out.println(r2);
 
-            jedis.hincrBy(pollKey, "option:Yes, yammy!", 1);
+        // Vote more
+        cache.vote(pollId, "Yes, yammy!");
+        cache.vote(pollId, "I do not really care ...");
 
-            System.out.println("\nAfter increment:");
-            jedis.hgetAll(pollKey).forEach((field, value) ->
-                    System.out.println(field + " = " + value)
-            );
-
-            // Optional: set TTL if you want cache behavior
-            jedis.expire(pollKey, 300); // seconds
-        }
+        // Fetch again
+        Map<String, String> r3 = cache.getPollResults(pollId);
+        System.out.println(r3);
     }
 }
