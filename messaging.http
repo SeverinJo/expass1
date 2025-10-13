@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:8080
+
+### Send vote via query parameters
+POST {{baseUrl}}/test/vote?pollId=abcd123&optionId=opt456&voterId=user789
+
+<> 2025-10-13T181643.200.txt
+
+### Send vote via JSON body (if your controller supports JSON body)
+POST {{baseUrl}}/test/vote
+Content-Type: application/json
+
+{
+  "pollId": "abcd123",
+  "voteOptionId": "opt456",
+  "voterId": "user789"
+}
+
+<> 2025-10-13T181643.400.json
+
+### Send a vote with no voterId (anonymous)
+POST {{baseUrl}}/test/vote?pollId=abcd123&optionId=opt456
+
+<> 2025-10-13T181643-1.200.txt
