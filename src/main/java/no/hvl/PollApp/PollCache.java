@@ -1,3 +1,4 @@
+/*
 package no.hvl.PollApp;
 
 import io.valkey.UnifiedJedis;
@@ -41,3 +42,4 @@ public class PollCache {
         return newCount;
     }
 }
+*/

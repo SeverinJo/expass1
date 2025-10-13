@@ -19,7 +19,9 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
+    //implementation("com.rabbitmq:amqp-client:5.26.0")
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation ("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.hibernate.orm:hibernate-core:7.1.1.Final")
     implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")

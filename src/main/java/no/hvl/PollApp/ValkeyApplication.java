@@ -1,3 +1,4 @@
+/*
 package no.hvl.PollApp;
 
 import java.util.Map;
@@ -29,3 +30,4 @@ public class ValkeyApplication {
         System.out.println(r3);
     }
 }
+*/
