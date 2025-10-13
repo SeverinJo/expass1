@@ -1,12 +1,12 @@
 package no.hvl.PollApp.config;
 
-import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;  // correct import
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +22,8 @@ public class RabbitConfig {
         CachingConnectionFactory cf = new CachingConnectionFactory("localhost", 5672);
         cf.setUsername("guest");
         cf.setPassword("guest");
-        // optional tuning:
         cf.setChannelCacheSize(25);
-        return cf.getRabbitConnectionFactory();
+        return cf;  // return the Spring CachingConnectionFactory directly
     }
 
     @Bean

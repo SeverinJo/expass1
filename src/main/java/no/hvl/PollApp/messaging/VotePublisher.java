@@ -1,5 +1,6 @@
 package no.hvl.PollApp.messaging;
 
+import no.hvl.PollApp.event.VoteEvent;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

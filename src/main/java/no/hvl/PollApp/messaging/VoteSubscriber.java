@@ -1,24 +1,31 @@
 package no.hvl.PollApp.messaging;
 
-import no.hvl.PollApp.config.RabbitConfig;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Component;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.amqp.support.AmqpHeaders;
+import com.rabbitmq.client.*;
 
-@Component
-public class VoteListener {
-    // Name of the queue you declared in your RabbitConfig
-    @RabbitListener(queues = RabbitConfig.VOTE_QUEUE)
-    public void receiveVote(VoteEvent evt, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
-        String pollId = evt.getPollId();
-        String optionId = evt.getVoteOptionId();
-        String voterId = evt.getVoterId();
+import java.nio.charset.StandardCharsets;
 
-        // Now: fetch your Poll entity by pollId, find the VoteOption, update DB or Redis
-        System.out.printf("Received vote event: poll=%s option=%s voter=%s (routingKey=%s)%n",
-                pollId, optionId, voterId, routingKey);
+public class VoteSubscriber {
+    private static final String EXCHANGE_NAME = "polls.exchange";
 
-        // TODO: your domain logic here
+    public static void main(String[] args) throws Exception {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        Connection conn = factory.newConnection();
+        Channel channel = conn.createChannel();
+
+        channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+        String queueName = channel.queueDeclare().getQueue();
+        channel.queueBind(queueName, EXCHANGE_NAME, "poll.vote.*");
+
+        System.out.println(" [*] Waiting for vote events...");
+
+        DeliverCallback callback = (consumerTag, delivery) -> {
+            String msg = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            String routingKey = delivery.getEnvelope().getRoutingKey();
+            System.out.printf(" [x] Received '%s' (routingKey: %s)%n", msg, routingKey);
+            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+        };
+
+        channel.basicConsume(queueName, false, callback, consumerTag -> {});
     }
 }
