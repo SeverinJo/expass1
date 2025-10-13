@@ -12,6 +12,11 @@ run messaging.http
 
 ##  Problems & how I solved them
 
+# Getting used to new tech
+Reading the tutorials and understanding this new software, as well as getting it up and running with docker took some time before figuring it out and getting it to work.
+
+# Testing
+Another challenge was setting up a system to test that messages are received and in the correct format. This was done with the messaging.http scratch. 
 
 # Tools
 For solving this I relied on code examples from lectures, online documentation and AI tools.
