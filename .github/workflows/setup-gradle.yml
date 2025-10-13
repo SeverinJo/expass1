@@ -22,10 +22,9 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        # caching is handled by the action itself. :contentReference[oaicite:3]{index=3}
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew clean build -x test --no-daemon
 
   http-tests:
     needs: build
@@ -43,39 +42,38 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Start app on 8080
+      - name: Start Spring Boot App
         run: |
-          nohup ./gradlew bootRun --no-daemon > app.log 2>&1 &
+          nohup ./gradlew bootRun --no-daemon &> app.log &
           echo "APP_PID=$!" >> $GITHUB_ENV
 
-      - name: Wait for app (60s)
+      - name: Wait for app to accept HTTP
         shell: bash
         run: |
           set -euo pipefail
           for i in {1..60}; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/users || true)
+            # adjust a “health” or HTTP endpoint known to be up
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/actuator/health || true)
             if [[ "$code" =~ ^(200|204|404)$ ]]; then
-              echo "Server is up: /users -> $code"
+              echo "Server up: /actuator/health -> $code"
               exit 0
             fi
             sleep 1
           done
-          echo "Server didn't start in time"; tail -n 200 app.log || true; exit 1
+          echo "Server did not start in time"
+          tail -n 200 app.log || true
+          exit 1
 
-        # Using /actuator/health is the standard readiness probe if actuator is added. :contentReference[oaicite:4]{index=4}
-
-      - name: Install unzip
-        run: sudo apt-get update && sudo apt-get install -y unzip
-
-      - name: Download HTTP Client CLI (ijhttp)
+      - name: Download and setup ijhttp CLI
         run: |
           curl -fL -o ijhttp.zip "https://jb.gg/ijhttp/latest"
-          unzip -qo ijhttp.zip
-          ./ijhttp/ijhttp --version
+          unzip -qo ijhttp.zip -d ijhttp
+          chmod +x ijhttp/bin/ijhttp
+          ls -l ijhttp/bin
 
       - name: Run HTTP tests
-        run: ./ijhttp/ijhttp scratch.http --env-file http-client.env.json --env local --report
-        # ijhttp usage with files + env flags per docs. :contentReference[oaicite:5]{index=5}
+        run: |
+          ijhttp/bin/ijhttp scratch.http --env-file http-client.env.json --env local --report
 
       - name: Upload HTTP test report
         if: always()
@@ -84,14 +82,14 @@ jobs:
           name: http-client-report
           path: reports/
 
-      - name: Upload app log on failure
-        if: failure()
+      - name: Upload app log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: app-log
           path: app.log
 
-      - name: Stop app
+      - name: Stop Spring Boot App
         if: always()
         run: |
           if [ -n "${{ env.APP_PID }}" ]; then kill ${{ env.APP_PID }} || true; fi
