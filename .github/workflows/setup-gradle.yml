@@ -52,7 +52,6 @@ jobs:
         run: |
           set -euo pipefail
           for i in {1..60}; do
-            # adjust a “health” or HTTP endpoint known to be up
             code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/actuator/health || true)
             if [[ "$code" =~ ^(200|204|404)$ ]]; then
               echo "Server up: /actuator/health -> $code"
@@ -71,9 +70,9 @@ jobs:
           chmod +x ijhttp/bin/ijhttp
           ls -l ijhttp/bin
 
-      - name: Run HTTP tests
+      - name: Run HTTP tests (messaging only)
         run: |
-          ijhttp/bin/ijhttp scratch.http --env-file http-client.env.json --env local --report
+          ijhttp/bin/ijhttp messaging.http --env-file http-client.env.json --env local --report
 
       - name: Upload HTTP test report
         if: always()
